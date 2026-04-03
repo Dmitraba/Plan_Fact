@@ -1,0 +1,422 @@
+﻿<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Terminal Matrix</title>
+  <style>
+:root{--bg:#07120d;--card:#0d1d16;--line:#1f3b2f;--ink:#c6ffd9;--muted:#7ebb97;--accent:#47ff9f;--accent2:#2ef6ff;--warn:#ffcf70;--rad:10px}
+*{box-sizing:border-box}body{margin:0;font-family:"JetBrains Mono","Consolas",monospace;background:linear-gradient(180deg,#050f0b,#07120d 30%,#0a1712);color:var(--ink)}
+.wrap{max-width:1500px;margin:0 auto;padding:18px;display:grid;grid-template-columns:320px 1fr;gap:12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--rad);box-shadow:inset 0 0 0 1px #0f2c1f}
+.hero{grid-column:1/3;padding:14px;background:linear-gradient(180deg,#10261b,#0d1d16)}h1{margin:0;font-size:44px;line-height:1;text-transform:uppercase;color:#7bffbc;text-shadow:0 0 12px #2aff8a33}.subtitle{margin-top:7px;color:#8ec5a6}
+.hero-grid{display:grid;grid-template-columns:1fr auto;gap:10px}.hero-right{display:grid;justify-items:end;gap:8px}.q-badge{padding:6px 10px;border:1px solid #2a664b;background:#0c2b1f}.updated{font-size:12px;color:#88b99d}
+.hero-kpis{margin-top:10px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}.hk{padding:9px;border:1px dashed #2e6148;background:#0a1812}.hk .l{font-size:11px;color:#8cc0a2}.hk .v{font-size:30px;font-weight:800;color:#7bffbc}.hk .u{font-size:11px;color:#85b899}
+.toolbar{margin-top:10px;display:flex;gap:8px;flex-wrap:wrap}.toolbar select,.toolbar input,.toolbar button{background:#08150f;border:1px solid #2e654a;color:#b9ffd2;padding:7px 9px;border-radius:8px}.toolbar button{background:#0b2a1e;font-weight:700}
+.meta-row{margin-top:8px;font-size:12px;color:#88b99d;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.section{padding:12px}.section h2{margin:0 0 9px;font-size:20px;color:#87ffbf;text-transform:uppercase;letter-spacing:.05em}
+.summary{grid-column:1/3;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}.box{padding:10px;border:1px solid #2b6046;background:#0a1812}.box .l{font-size:11px;color:#7fb595}.box .v{font-size:42px;font-weight:800;color:#7bffbc}
+.split{grid-column:1/3;display:grid;grid-template-columns:1fr 1fr;gap:10px}.bar-row{display:flex;justify-content:space-between;font-size:12px;color:#88bda0}.track{height:10px;border:1px solid #2d6348;background:#09170f;border-radius:999px;overflow:hidden}.fill-plan{height:100%;background:#2ef6ff}.fill-fact{height:100%;background:#47ff9f}.delta-main{font-size:34px;font-weight:800}.quarters{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px}.q{padding:8px;border:1px solid #2d6248;background:#0a1712}.q.active{background:#0f2a1f;box-shadow:0 0 0 1px #4bff9e44 inset}
+.projects-wrap{grid-column:1/2}.projects-grid{display:grid;grid-template-columns:1fr;gap:8px}.project{padding:9px;border:1px solid #2f664b;background:#0a1712;cursor:pointer}.project.active{box-shadow:0 0 0 1px #4bff9e44 inset}.p-name{font-size:32px;line-height:.95;font-weight:900}.p-track,.p-deadline{color:#7db497}.ring{--p:0;width:60px;height:60px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(#47ff9f calc(var(--p)*1%),#123122 0),radial-gradient(circle,#0a1712 60%,transparent 61%);border:1px solid #2d6348}
+.p-stats{margin-top:8px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.tiny{padding:6px;border:1px solid #2b5f45;background:#0a1712}.tiny b{display:block;font-size:20px}
+.detail{grid-column:2/3;display:grid;grid-template-columns:1fr;gap:10px}.stage-stack{height:9px;border:1px solid #2e6348;background:#0a1812;display:flex}.seg-d{background:#47ff9f}.seg-w{background:#ffcf70}.seg-t{background:#5f8f76}
+.task-table{width:100%;border-collapse:collapse}.task-table th,.task-table td{padding:7px 6px;border-bottom:1px solid #224735}.pill{padding:2px 8px;border-radius:999px;font-size:11px;font-weight:800}.st-done{background:#163b2a;color:#8fffc0}.st-work{background:#473a1b;color:#ffd281}.st-todo{background:#1a2f25;color:#9ac9af}
+.radar{list-style:none;padding:0;margin:0;display:grid;gap:7px}.radar li{padding:8px;border:1px solid #2d6248;background:#0a1712;display:grid;grid-template-columns:86px 1fr auto;gap:8px;align-items:center}.urg{padding:2px 8px;border-radius:999px;font-size:11px;font-weight:800}.urg.hot{background:#3c1f26;color:#ffb6c4}.urg.warm{background:#47381d;color:#ffd58f}.urg.cool{background:#173729;color:#92fbc3}
+.reveal{opacity:1;transform:none}
+@media(max-width:1250px){.wrap{grid-template-columns:1fr}.hero,.summary,.split,.projects-wrap,.detail{grid-column:auto}.projects-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.detail{grid-template-columns:1fr}}@media(max-width:760px){.projects-grid{grid-template-columns:1fr}.summary,.hero-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.split{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="hero card reveal">
+      <div class="hero-grid">
+        <div>
+          <h1>Terminal Matrix</h1>
+          <p class="subtitle">Один экран для контроля статуса, темпа и дедлайнов по всем проектам.</p>
+        </div>
+        <div class="hero-right">
+          <div class="q-badge" id="quarterBadge">Q2 2026 · активный квартал</div>
+          <div class="updated" id="metaUpdated">Обновлено: —</div>
+        </div>
+      </div>
+
+      <div class="hero-kpis">
+        <div class="hk"><div class="l">План</div><div class="v" id="chipPlan">0%</div><div class="u">по времени</div></div>
+        <div class="hk"><div class="l">Факт</div><div class="v" id="chipFact">0%</div><div class="u">по задачам</div></div>
+        <div class="hk"><div class="l">Отклонение</div><div class="v" id="chipDelta">0</div><div class="u">п.п.</div></div>
+        <div class="hk"><div class="l">В работе</div><div class="v" id="chipActive">0</div><div class="u" id="metaProjects">проектов: 0</div></div>
+      </div>
+
+      <div class="toolbar">
+        <label>Проект:
+          <select id="projectFilter"></select>
+        </label>
+        <input id="fileInput" type="file" accept=".csv,text/csv" />
+        <button id="resetBtn">Сброс CSV</button>
+        <label style="display:flex;align-items:center;gap:6px;">
+          <input id="hideDone" type="checkbox" /> скрыть done
+        </label>
+      </div>
+
+      <div class="meta-row">
+        <span id="metaPeriod">Период квартала: —</span>
+        <span>FX: <a href="https://reactbits.dev/" target="_blank" rel="noopener noreferrer">reactbits.dev</a> · <a href="https://21st.dev/home" target="_blank" rel="noopener noreferrer">21st.dev</a></span>
+      </div>
+    </header>
+
+    <section class="section card reveal">
+      <h2>Сводка</h2>
+      <div class="summary">
+        <div class="box"><div class="l">Задач</div><div class="v" id="kTotal">0</div></div>
+        <div class="box"><div class="l">Done</div><div class="v" id="kDone">0</div></div>
+        <div class="box"><div class="l">In progress</div><div class="v" id="kWork">0</div></div>
+        <div class="box"><div class="l">Todo</div><div class="v" id="kTodo">0</div></div>
+        <div class="box"><div class="l">Факт, %</div><div class="v" id="kFact">0</div></div>
+      </div>
+    </section>
+
+    <section class="split reveal">
+      <div class="section card">
+        <h2>Квартальный план/факт</h2>
+        <div class="bar-row"><span>План по времени квартала</span><span id="planPct">0%</span></div>
+        <div class="track"><div class="fill-plan" id="planFill"></div></div>
+        <div class="bar-row"><span>Факт выполнения</span><span id="factPct">0%</span></div>
+        <div class="track"><div class="fill-fact" id="factFill"></div></div>
+        <div class="delta-main" id="deltaValue">+0.0 п.п.</div>
+        <div class="delta-sub">Отклонение факт от плана</div>
+      </div>
+      <div class="section card">
+        <h2>Шаги квартала</h2>
+        <div class="quarters" id="quarters"></div>
+      </div>
+    </section>
+
+    <section class="section card reveal projects-wrap">`n      <h2>Проекты: ход исполнения</h2>
+      <div class="projects-grid" id="projectGrid"></div>
+    </section>
+
+    <section class="detail reveal">
+      <div class="section card">
+        <h2 id="detailTitle">Стадии проекта</h2>
+        <div id="stages"></div>
+        <table class="task-table">
+          <thead>
+            <tr>
+              <th style="width:105px;">Дедлайн</th>
+              <th>Задача</th>
+              <th style="width:110px;">Статус</th>
+            </tr>
+          </thead>
+          <tbody id="tasksBody"></tbody>
+        </table>
+      </div>
+      <div class="section card">
+        <h2>Deadline Radar</h2>
+        <ul class="radar" id="radar"></ul>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const embeddedCsv = `date,project,track,task,status,stage,priority,owner,next_step,deadline
+2026-04-03,Intellect-SEO,Content,Собрать и утвердить контент-план на Q2,in_progress,Discovery,high,owner,Зафиксировать список разделов и объемы,2026-04-08
+2026-04-03,Intellect-SEO,Content,Подготовить пакет статей для публикации,todo,Content Production,high,owner,Собрать финальные тексты и мета,2026-04-15
+2026-04-03,Intellect-SEO,Content,Проверка качества и публикация первой волны,todo,Publish,medium,owner,Провести QA и выкладку,2026-04-20
+2026-04-03,Keraplitka,Coliseum,Lirika: финальная проверка контента и мета,in_progress,Content Production,high,owner,Пройти QA чеклист,2026-04-05
+2026-04-03,Keraplitka,Coliseum,Rim: подготовка текста категории + мета,todo,Content Production,high,owner,Собрать финальный текст и title/description,2026-04-06
+2026-04-03,Keraplitka,Coliseum,Пакет изображений для категорий (CSV + manifest),in_progress,Content Production,high,owner,Сверить соответствие image-table/upload,2026-04-06
+2026-04-03,Keraplitka,Coliseum,QA по CATEGORY_TEXT_QA_CHECKLIST,todo,QA,high,owner,Провести проверку для каждой серии,2026-04-10
+2026-04-03,Феникс,OpenCart,Собрать backlog категорий на контент,todo,Discovery,high,owner,Утвердить приоритетные категории,2026-04-09
+2026-04-03,Феникс,OpenCart,Подготовить первую очередь контента,todo,Content Production,high,owner,Сформировать черновики категорий,2026-04-16
+2026-04-03,Феникс,OpenCart,Техпроверка и выкладка первой партии,todo,Publish,medium,owner,Сделать QA и публикацию,2026-04-23
+2026-04-03,Гидрант,OpenCart,Собрать структуру проекта и список источников,todo,Discovery,high,owner,Собрать карту разделов и доноров,2026-04-12
+2026-04-03,Гидрант,OpenCart,Подготовить базовый контент-каркас,todo,RAG Prep,high,owner,Сформировать таблицы и шаблоны,2026-04-19
+2026-04-03,Гидрант,OpenCart,Запустить пилот заполнения,todo,Content Production,medium,owner,Сделать пилот 20-50 SKU,2026-04-26
+2026-04-03,Bathstudio,ShopScript,Собрать план миграции контента с Joomla,in_progress,Discovery,high,owner,Определить блоки миграции и приоритет,2026-04-11
+2026-04-03,Bathstudio,ShopScript,Перенести первую волну карточек/категорий,todo,Content Production,high,owner,Подготовить и перенести пакет №1,2026-04-18
+2026-04-03,Bathstudio,ShopScript,QA после переноса и правки,todo,QA,medium,owner,Проверить SEO и контент целостно,2026-04-25
+2026-04-03,Мастер Саун,MODX,Собрать редакционный план статей на Q2,in_progress,Discovery,high,owner,Утвердить темы и частоту публикаций,2026-04-07
+2026-04-03,Мастер Саун,MODX,Написать и согласовать первую серию статей,todo,Content Production,high,owner,Подготовить статьи к публикации,2026-04-14
+2026-04-03,Мастер Саун,MODX,Публикация и пост-QA,todo,Publish,medium,owner,Проверить индексацию и структуру,2026-04-21`;
+
+    const STAGE_ORDER = ["Backlog","Discovery","RAG Prep","Content Production","QA","Publish","Stabilization"];
+    const WEIGHT = { done: 1, in_progress: 0.5, todo: 0 };
+    const STATUS_CLASS = { done: "st-done", in_progress: "st-work", todo: "st-todo" };
+
+    let rows = [];
+    let activeProject = "__all__";
+
+    function csvSplit(line) {
+      const out = [];
+      let cur = "";
+      let quote = false;
+      for (let i = 0; i < line.length; i++) {
+        const ch = line[i];
+        if (ch === '"' && line[i + 1] === '"') { cur += '"'; i++; continue; }
+        if (ch === '"') { quote = !quote; continue; }
+        if (ch === "," && !quote) { out.push(cur); cur = ""; continue; }
+        cur += ch;
+      }
+      out.push(cur);
+      return out.map(v => v.trim());
+    }
+
+    function parseCSV(text) {
+      const lines = text.trim().split(/\r?\n/).filter(Boolean);
+      const headers = csvSplit(lines.shift());
+      return lines.map(line => {
+        const cols = csvSplit(line);
+        const obj = {};
+        headers.forEach((h, i) => obj[h] = (cols[i] || "").trim());
+        return obj;
+      });
+    }
+
+    function clamp(v, a, b) { return Math.max(a, Math.min(v, b)); }
+
+    function getQuarter(now = new Date()) {
+      const year = now.getFullYear();
+      const q = Math.floor(now.getMonth() / 3) + 1;
+      const startMonth = (q - 1) * 3;
+      const start = new Date(year, startMonth, 1);
+      const end = new Date(year, startMonth + 3, 0);
+      return { year, q, start, end };
+    }
+
+    function pctByTime(now, start, end) {
+      return clamp(((now - start) / (end - start)) * 100, 0, 100);
+    }
+
+    function daysTo(deadline) {
+      if (!deadline) return null;
+      const d = new Date(deadline + "T00:00:00");
+      if (isNaN(d)) return null;
+      const t = new Date();
+      t.setHours(0,0,0,0);
+      return Math.round((d - t) / 86400000);
+    }
+
+    function uniqueProjects(data) {
+      return [...new Set(data.map(r => r.project).filter(Boolean))].sort((a,b) => a.localeCompare(b));
+    }
+
+    function filteredRows() {
+      const hideDone = document.getElementById("hideDone").checked;
+      let data = rows;
+      if (activeProject !== "__all__") data = data.filter(r => r.project === activeProject);
+      if (hideDone) data = data.filter(r => r.status !== "done");
+      return data;
+    }
+
+    function projectSummary(name, data) {
+      const items = data.filter(r => r.project === name);
+      const total = items.length;
+      const done = items.filter(r => r.status === "done").length;
+      const work = items.filter(r => r.status === "in_progress").length;
+      const todo = items.filter(r => r.status === "todo").length;
+      const fact = total ? (items.reduce((s, r) => s + (WEIGHT[r.status] || 0), 0) / total) * 100 : 0;
+      const nearest = items.filter(r => r.deadline).sort((a,b) => (a.deadline||"").localeCompare(b.deadline||""))[0];
+      return { items, total, done, work, todo, fact, nearest };
+    }
+
+    function renderFilter() {
+      const sel = document.getElementById("projectFilter");
+      const projects = uniqueProjects(rows);
+      sel.innerHTML = `<option value="__all__">Все проекты</option>` + projects.map(p => `<option value="${p}">${p}</option>`).join("");
+      if (!projects.includes(activeProject)) activeProject = "__all__";
+      sel.value = activeProject;
+    }
+
+    function renderTop(data) {
+      const total = data.length;
+      const done = data.filter(r => r.status === "done").length;
+      const work = data.filter(r => r.status === "in_progress").length;
+      const todo = data.filter(r => r.status === "todo").length;
+      const fact = total ? (data.reduce((s, r) => s + (WEIGHT[r.status] || 0), 0) / total) * 100 : 0;
+
+      document.getElementById("kTotal").textContent = total;
+      document.getElementById("kDone").textContent = done;
+      document.getElementById("kWork").textContent = work;
+      document.getElementById("kTodo").textContent = todo;
+      document.getElementById("kFact").textContent = fact.toFixed(0);
+
+      const q = getQuarter(new Date());
+      const plan = pctByTime(new Date(), q.start, q.end);
+      const delta = fact - plan;
+
+      document.getElementById("quarterBadge").textContent = `Q${q.q} ${q.year} · активный квартал`;
+      document.getElementById("metaPeriod").textContent = `Период квартала: ${q.start.toISOString().slice(0,10)} .. ${q.end.toISOString().slice(0,10)}`;
+      document.getElementById("metaUpdated").textContent = `Обновлено: ${new Date().toLocaleString("ru-RU")}`;
+      document.getElementById("metaProjects").textContent = `проектов: ${uniqueProjects(rows).length}`;
+
+      document.getElementById("chipPlan").textContent = `${plan.toFixed(1)}%`;
+      document.getElementById("chipFact").textContent = `${fact.toFixed(1)}%`;
+      document.getElementById("chipDelta").textContent = `${delta >= 0 ? "+" : ""}${delta.toFixed(1)}`;
+      document.getElementById("chipActive").textContent = `${work}`;
+
+      document.getElementById("planFill").style.width = `${plan.toFixed(1)}%`;
+      document.getElementById("factFill").style.width = `${fact.toFixed(1)}%`;
+      document.getElementById("planPct").textContent = `${plan.toFixed(1)}%`;
+      document.getElementById("factPct").textContent = `${fact.toFixed(1)}%`;
+
+      document.getElementById("deltaValue").textContent = `${delta >= 0 ? "+" : ""}${delta.toFixed(1)} п.п.`;
+
+      const qWrap = document.getElementById("quarters");
+      qWrap.innerHTML = "";
+      for (let i = 1; i <= 4; i++) {
+        qWrap.innerHTML += `<div class="q ${i === q.q ? "active" : ""}"><b>Q${i}</b><span>${i===q.q ? "активный шаг" : "этап"}</span></div>`;
+      }
+    }
+
+    function renderProjects(allData) {
+      const grid = document.getElementById("projectGrid");
+      grid.innerHTML = "";
+      const names = uniqueProjects(allData);
+      names.forEach(name => {
+        const s = projectSummary(name, allData);
+        const nearestDays = s.nearest ? daysTo(s.nearest.deadline) : null;
+        const nearText = s.nearest ? (nearestDays < 0 ? `просрочено ${Math.abs(nearestDays)} дн` : `через ${nearestDays} дн`) : "дедлайн не задан";
+        const card = document.createElement("article");
+        card.className = "project" + (activeProject === name ? " active" : "");
+        card.innerHTML = `
+          <div class="p-top">
+            <div>
+              <div class="p-name">${name}</div>
+              <div class="p-track">${s.nearest?.track || "track"}</div>
+            </div>
+            <div class="ring" style="--p:${s.fact.toFixed(1)}">${s.fact.toFixed(0)}%</div>
+          </div>
+          <div class="p-stats">
+            <div class="tiny">Done<b>${s.done}</b></div>
+            <div class="tiny">In progress<b>${s.work}</b></div>
+            <div class="tiny">Todo<b>${s.todo}</b></div>
+          </div>
+          <div class="p-deadline">Ближайший дедлайн: <b>${s.nearest?.deadline || "-"}</b> · ${nearText}</div>
+        `;
+        card.addEventListener("click", () => {
+          activeProject = name;
+          document.getElementById("projectFilter").value = name;
+          render();
+        });
+        grid.appendChild(card);
+      });
+    }
+
+    function renderStagesAndTasks(data) {
+      const detailsProject = activeProject === "__all__" ? (uniqueProjects(data)[0] || "__none__") : activeProject;
+      const items = detailsProject === "__none__" ? [] : data.filter(r => r.project === detailsProject);
+      document.getElementById("detailTitle").textContent = detailsProject === "__none__" ? "Стадии проекта" : `Стадии проекта: ${detailsProject}`;
+
+      const stageMap = new Map();
+      items.forEach(r => {
+        const stage = r.stage || "Unsorted";
+        if (!stageMap.has(stage)) stageMap.set(stage, { done:0, in_progress:0, todo:0, total:0 });
+        const v = stageMap.get(stage);
+        v.total += 1;
+        if (r.status === "done") v.done += 1;
+        else if (r.status === "in_progress") v.in_progress += 1;
+        else v.todo += 1;
+      });
+
+      const sEl = document.getElementById("stages");
+      sEl.innerHTML = "";
+      [...stageMap.entries()].sort((a,b) => {
+        const ia = STAGE_ORDER.indexOf(a[0]);
+        const ib = STAGE_ORDER.indexOf(b[0]);
+        return (ia===-1?999:ia) - (ib===-1?999:ib);
+      }).forEach(([name, s]) => {
+        const d = s.total ? (s.done / s.total) * 100 : 0;
+        const w = s.total ? (s.in_progress / s.total) * 100 : 0;
+        const t = s.total ? (s.todo / s.total) * 100 : 0;
+        sEl.innerHTML += `
+          <div class="stage-item">
+            <div class="stage-head"><span>${name}</span><span>${s.done}/${s.total} done</span></div>
+            <div class="stage-stack">
+              <div class="seg-d" style="width:${d}%"></div>
+              <div class="seg-w" style="width:${w}%"></div>
+              <div class="seg-t" style="width:${t}%"></div>
+            </div>
+          </div>
+        `;
+      });
+
+      const body = document.getElementById("tasksBody");
+      body.innerHTML = "";
+      items.slice().sort((a,b) => (a.deadline||"").localeCompare(b.deadline||"")).forEach(r => {
+        body.innerHTML += `
+          <tr>
+            <td>${r.deadline || "-"}</td>
+            <td>${r.task || "-"}</td>
+            <td><span class="pill ${STATUS_CLASS[r.status] || "st-todo"}">${r.status || "-"}</span></td>
+          </tr>
+        `;
+      });
+    }
+
+    function renderRadar(data) {
+      const radar = document.getElementById("radar");
+      const rData = data.filter(r => r.deadline).slice().sort((a,b) => (a.deadline||"").localeCompare(b.deadline||"")).slice(0, 12);
+      radar.innerHTML = "";
+      rData.forEach(r => {
+        const d = daysTo(r.deadline);
+        let cls = "cool", label = "в плане";
+        if (d !== null && d <= 2) { cls = "hot"; label = d < 0 ? "просрочено" : "срочно"; }
+        else if (d !== null && d <= 7) { cls = "warm"; label = "близко"; }
+        radar.innerHTML += `
+          <li>
+            <div class="dl">${r.deadline}</div>
+            <div><b>${r.project}</b><div style="margin-top:3px;font-size:12px;color:#5f789b;">${r.task}</div></div>
+            <span class="urg ${cls}">${label}</span>
+          </li>
+        `;
+      });
+    }
+
+    function render() {
+      const data = filteredRows();
+      renderTop(data);
+      renderProjects(rows);
+      renderStagesAndTasks(data);
+      renderRadar(data);
+    }
+
+    function reveal() {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(e => { if (e.isIntersecting) e.target.classList.add("show"); });
+      }, { threshold: .1 });
+      document.querySelectorAll(".reveal").forEach(el => io.observe(el));
+    }
+
+    function load(csvText) {
+      rows = parseCSV(csvText);
+      renderFilter();
+      render();
+    }
+
+    document.getElementById("projectFilter").addEventListener("change", (e) => {
+      activeProject = e.target.value;
+      render();
+    });
+    document.getElementById("hideDone").addEventListener("change", () => render());
+
+    document.getElementById("fileInput").addEventListener("change", (e) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => load(String(reader.result || ""));
+      reader.readAsText(file, "utf-8");
+    });
+
+    document.getElementById("resetBtn").addEventListener("click", () => {
+      activeProject = "__all__";
+      document.getElementById("hideDone").checked = false;
+      load(embeddedCsv);
+    });
+
+    load(embeddedCsv);
+    reveal();
+  </script>
+</body>
+</html>
+
+

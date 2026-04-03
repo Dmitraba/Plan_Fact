@@ -1,0 +1,20 @@
+date,project,track,task,status,stage,priority,owner,next_step,deadline
+2026-04-03,Intellect-SEO,Content,Собрать и утвердить контент-план на Q2,in_progress,Discovery,high,owner,Зафиксировать список разделов и объемы,2026-04-08
+2026-04-03,Intellect-SEO,Content,Подготовить пакет статей для публикации,todo,Content Production,high,owner,Собрать финальные тексты и мета,2026-04-15
+2026-04-03,Intellect-SEO,Content,Проверка качества и публикация первой волны,todo,Publish,medium,owner,Провести QA и выкладку,2026-04-20
+2026-04-03,Keraplitka,Coliseum,Lirika: финальная проверка контента и мета,in_progress,Content Production,high,owner,Пройти QA чеклист,2026-04-05
+2026-04-03,Keraplitka,Coliseum,Rim: подготовка текста категории + мета,todo,Content Production,high,owner,Собрать финальный текст и title/description,2026-04-06
+2026-04-03,Keraplitka,Coliseum,Пакет изображений для категорий (CSV + manifest),in_progress,Content Production,high,owner,Сверить соответствие image-table/upload,2026-04-06
+2026-04-03,Keraplitka,Coliseum,QA по CATEGORY_TEXT_QA_CHECKLIST,todo,QA,high,owner,Провести проверку для каждой серии,2026-04-10
+2026-04-03,Феникс,OpenCart,Собрать backlog категорий на контент,todo,Discovery,high,owner,Утвердить приоритетные категории,2026-04-09
+2026-04-03,Феникс,OpenCart,Подготовить первую очередь контента,todo,Content Production,high,owner,Сформировать черновики категорий,2026-04-16
+2026-04-03,Феникс,OpenCart,Техпроверка и выкладка первой партии,todo,Publish,medium,owner,Сделать QA и публикацию,2026-04-23
+2026-04-03,Гидрант,OpenCart,Собрать структуру проекта и список источников,todo,Discovery,high,owner,Собрать карту разделов и доноров,2026-04-12
+2026-04-03,Гидрант,OpenCart,Подготовить базовый контент-каркас,todo,RAG Prep,high,owner,Сформировать таблицы и шаблоны,2026-04-19
+2026-04-03,Гидрант,OpenCart,Запустить пилот заполнения,todo,Content Production,medium,owner,Сделать пилот 20-50 SKU,2026-04-26
+2026-04-03,Bathstudio,ShopScript,Собрать план миграции контента с Joomla,in_progress,Discovery,high,owner,Определить блоки миграции и приоритет,2026-04-11
+2026-04-03,Bathstudio,ShopScript,Перенести первую волну карточек/категорий,todo,Content Production,high,owner,Подготовить и перенести пакет №1,2026-04-18
+2026-04-03,Bathstudio,ShopScript,QA после переноса и правки,todo,QA,medium,owner,Проверить SEO и контент целостно,2026-04-25
+2026-04-03,Мастер Саун,MODX,Собрать редакционный план статей на Q2,in_progress,Discovery,high,owner,Утвердить темы и частоту публикаций,2026-04-07
+2026-04-03,Мастер Саун,MODX,Написать и согласовать первую серию статей,todo,Content Production,high,owner,Подготовить статьи к публикации,2026-04-14
+2026-04-03,Мастер Саун,MODX,Публикация и пост-QA,todo,Publish,medium,owner,Проверить индексацию и структуру,2026-04-21

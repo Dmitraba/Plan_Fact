@@ -1,0 +1,1062 @@
+﻿<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Project Flight Deck</title>
+  <style>
+    :root {
+      --bg: #f3f6fb;
+      --bg-accent: #e9f0fb;
+      --card: #ffffff;
+      --card-soft: #f8fbff;
+      --ink: #11233f;
+      --muted: #617796;
+      --line: #dce6f4;
+
+      --primary: #326bff;
+      --primary-2: #5f92ff;
+      --warning: #ef9f3d;
+      --slate: #9db0cb;
+      --danger: #cc5768;
+
+      --radius-lg: 18px;
+      --radius-md: 12px;
+      --shadow: 0 12px 30px rgba(25, 66, 130, 0.11);
+    }
+
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      background:
+        radial-gradient(1200px 420px at 100% -10%, #dce8fb 0%, transparent 58%),
+        radial-gradient(900px 420px at -15% 120%, #dce8fb 0%, transparent 58%),
+        var(--bg);
+      color: var(--ink);
+      font-family: "Segoe UI", "Trebuchet MS", Tahoma, Arial, sans-serif;
+    }
+
+    .wrap {
+      max-width: 1440px;
+      margin: 18px auto 30px;
+      padding: 0 16px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow);
+    }
+
+    .hero {
+      padding: 16px;
+      color: #f5f9ff;
+      background: linear-gradient(126deg, #2f5fb9 0%, #4678cf 58%, #6e9ee8 100%);
+      border: 1px solid #5f8fdf;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: -40% -6% auto -20%;
+      height: 220px;
+      background: linear-gradient(90deg, #ffffff24, #deebff28, #ffffff22);
+      filter: blur(16px);
+      transform: rotate(-2deg);
+      pointer-events: none;
+    }
+
+    .hero-grid {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 1.45fr .85fr;
+      gap: 14px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(28px, 3.5vw, 42px);
+      line-height: 1.02;
+      letter-spacing: .2px;
+      font-weight: 820;
+    }
+
+    .subtitle {
+      margin: 8px 0 0;
+      max-width: 760px;
+      font-size: 15px;
+      color: #eef4ff;
+    }
+
+    .hero-right {
+      display: grid;
+      justify-items: end;
+      align-content: start;
+      gap: 10px;
+    }
+
+    .q-badge {
+      border: 1px solid #ffffff66;
+      background: #ffffff20;
+      border-radius: 999px;
+      padding: 9px 13px;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .updated {
+      font-size: 12px;
+      color: #f0f6ff;
+    }
+
+    .hero-kpis {
+      position: relative;
+      z-index: 1;
+      margin-top: 14px;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 9px;
+    }
+
+    .hk {
+      border: 1px solid #ffffff59;
+      background: #ffffff24;
+      border-radius: var(--radius-md);
+      padding: 10px;
+      min-height: 68px;
+    }
+    .hk .l { font-size: 12px; color: #e7f0ff; }
+    .hk .v { margin-top: 5px; font-size: 24px; line-height: 1; font-weight: 800; }
+    .hk .u { margin-top: 3px; font-size: 12px; color: #ecf3ff; }
+
+    .toolbar {
+      position: relative;
+      z-index: 1;
+      margin-top: 14px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .toolbar select,
+    .toolbar input[type=file],
+    .toolbar button {
+      border-radius: 10px;
+      border: 1px solid #ffffff66;
+      background: #ffffff22;
+      color: #ffffff;
+      padding: 8px 10px;
+      font-weight: 700;
+    }
+    .toolbar select option { color: #123159; }
+    .toolbar button {
+      cursor: pointer;
+      background: linear-gradient(180deg, #2759b4, #214d9e);
+      border-color: #2f63bd;
+    }
+
+    .meta-row {
+      position: relative;
+      z-index: 1;
+      margin-top: 10px;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+      font-size: 12px;
+      color: #ecf3ff;
+    }
+    .meta-row a {
+      color: #ffffff;
+      text-decoration: underline;
+      font-weight: 700;
+    }
+
+    .section {
+      margin-top: 12px;
+      padding: 14px;
+    }
+
+    .section h2 {
+      margin: 0 0 8px;
+      font-size: 18px;
+      letter-spacing: .2px;
+      font-weight: 760;
+    }
+
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0,1fr));
+      gap: 9px;
+    }
+
+    .box {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      padding: 10px;
+      background: var(--card-soft);
+    }
+    .box .l { color: var(--muted); font-size: 12px; }
+    .box .v {
+      margin-top: 6px;
+      font-size: 40px;
+      line-height: .95;
+      font-weight: 840;
+      color: #173766;
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .bar-row {
+      margin: 10px 0 6px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .track {
+      height: 12px;
+      border-radius: 999px;
+      border: 1px solid #c6d8f4;
+      background: #e5eefc;
+      overflow: hidden;
+    }
+
+    .fill-plan { height: 100%; width: 0%; background: linear-gradient(90deg, #8baef2, #b9cff8); transition: width .55s ease; }
+    .fill-fact { height: 100%; width: 0%; background: linear-gradient(90deg, var(--primary), var(--primary-2)); transition: width .55s ease; }
+
+    .delta-main {
+      margin-top: 10px;
+      font-size: 30px;
+      line-height: .95;
+      font-weight: 860;
+      color: #214e96;
+    }
+    .delta-sub {
+      margin-top: 4px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .quarters {
+      margin-top: 10px;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .q {
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--card-soft);
+      padding: 10px;
+      min-height: 68px;
+    }
+    .q.active {
+      border-color: #7aa4f2;
+      box-shadow: 0 0 0 1px #89b0f54a inset;
+    }
+    .q b { font-size: 34px; line-height: 1; }
+    .q span { display:block; margin-top: 4px; font-size: 12px; color: var(--muted); }
+
+    .projects-grid {
+      margin-top: 10px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: 8px;
+    }
+
+    .project {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--card-soft);
+      padding: 10px;
+      cursor: pointer;
+      transition: border-color .2s ease, transform .2s ease, box-shadow .2s ease;
+    }
+    .project:hover {
+      border-color: #83adef;
+      transform: translateY(-1px);
+      box-shadow: 0 9px 18px rgba(47, 94, 174, 0.14);
+    }
+    .project.active {
+      border-color: #5f90e9;
+      box-shadow: 0 0 0 1px #5f90e940 inset;
+    }
+
+    .p-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      align-items: start;
+    }
+
+    .p-name {
+      font-size: 24px;
+      line-height: 1;
+      font-weight: 850;
+      color: #183a6a;
+    }
+    .p-track {
+      margin-top: 2px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .ring {
+      --p: 0;
+      width: 62px;
+      height: 62px;
+      border-radius: 50%;
+      border: 1px solid #b8cced;
+      display: grid;
+      place-items: center;
+      background:
+        conic-gradient(from 0deg, var(--primary) calc(var(--p) * 1%), #d8e7fb 0),
+        radial-gradient(circle at center, #ffffff 63%, transparent 64%);
+      font-size: 18px;
+      line-height: 1;
+      font-weight: 800;
+      color: #1f457e;
+    }
+
+    .p-stats {
+      margin-top: 8px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: 6px;
+    }
+
+    .tiny {
+      border: 1px solid #cad9f1;
+      border-radius: 10px;
+      padding: 6px;
+      background: #f4f9ff;
+      font-size: 11px;
+      color: var(--muted);
+    }
+    .tiny b {
+      display: block;
+      margin-top: 2px;
+      font-size: 20px;
+      line-height: 1;
+      color: #234a7c;
+    }
+
+    .p-deadline {
+      margin-top: 8px;
+      font-size: 12px;
+      color: #355d8f;
+    }
+
+    .detail {
+      margin-top: 12px;
+      display: grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 12px;
+    }
+
+    .stage-item { margin-bottom: 10px; }
+    .stage-head {
+      margin-bottom: 5px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: #5a769c;
+    }
+
+    .stage-stack {
+      height: 10px;
+      border: 1px solid #bed1ef;
+      border-radius: 999px;
+      overflow: hidden;
+      background: #e6effc;
+      display: flex;
+    }
+    .seg-d { background: #3f8bff; }
+    .seg-w { background: var(--warning); }
+    .seg-t { background: var(--slate); }
+
+    .task-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 8px;
+      font-size: 13px;
+    }
+    .task-table th, .task-table td {
+      text-align: left;
+      padding: 8px 7px;
+      border-bottom: 1px solid #d3dff2;
+      vertical-align: top;
+    }
+    .task-table th { font-size: 12px; color: var(--muted); font-weight: 700; }
+
+    .pill {
+      display: inline-block;
+      border-radius: 999px;
+      padding: 2px 8px;
+      font-size: 11px;
+      font-weight: 800;
+    }
+    .st-done { background: #e4efff; color: #2e67b5; }
+    .st-work { background: #fff0db; color: #9e6719; }
+    .st-todo { background: #edf2fa; color: #5f779e; }
+
+    .radar {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: 8px;
+    }
+
+    .radar li {
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--card-soft);
+      padding: 8px;
+      display: grid;
+      grid-template-columns: 92px 1fr auto;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .dl { font-size: 12px; font-weight: 800; color: #2b4f84; }
+
+    .urg {
+      font-size: 11px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      padding: 2px 8px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+    .urg.hot { color: #b44f5c; background: #ffe8ec; border-color: #e5b2ba; }
+    .urg.warm { color: #9a651c; background: #ffefdb; border-color: #f2cf9f; }
+    .urg.cool { color: #2f6eb5; background: #eaf2ff; border-color: #bed2f4; }
+
+    .reveal { opacity: 0; transform: translateY(10px); transition: opacity .45s ease, transform .45s ease; }
+    .reveal.show { opacity: 1; transform: translateY(0); }
+
+    @media (max-width: 1180px) {
+      .projects-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      .detail { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 900px) {
+      .hero-grid { grid-template-columns: 1fr; }
+      .hero-right { justify-items: start; }
+      .hero-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .split { grid-template-columns: 1fr; }
+      .quarters { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      .projects-grid { grid-template-columns: 1fr; }
+      .radar li { grid-template-columns: 80px 1fr; }
+      .radar li .urg { grid-column: span 2; justify-self: start; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * { animation: none !important; transition: none !important; }
+    }
+  
+    
+    /* FX v2: mesh + grain + spotlight + magnetic cards + liquid progress */
+    .hero { position: relative; overflow: hidden; isolation: isolate; min-height: 0 !important; }
+    .fx-mesh {
+      position: absolute;
+      inset: -20% -10% -35% -10%;
+      background:
+        radial-gradient(38% 52% at 16% 22%, rgba(98,164,255,.36) 0%, rgba(98,164,255,0) 70%),
+        radial-gradient(34% 46% at 84% 20%, rgba(255,189,112,.28) 0%, rgba(255,189,112,0) 72%),
+        radial-gradient(42% 58% at 50% 86%, rgba(124,121,255,.23) 0%, rgba(124,121,255,0) 72%);
+      filter: blur(8px) saturate(120%);
+      animation: fxMeshDrift 14s ease-in-out infinite alternate;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .fx-grain {
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140' viewBox='0 0 140 140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.95' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.08'/%3E%3C/svg%3E");
+      mix-blend-mode: soft-light;
+      opacity: .5;
+      pointer-events: none;
+      z-index: 0;
+      animation: fxGrainShift .8s steps(2) infinite;
+    }
+    .fx-spotlight {
+      position: absolute;
+      width: 420px;
+      height: 420px;
+      left: 0;
+      top: 0;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,255,255,.33) 0%, rgba(255,255,255,.12) 28%, rgba(255,255,255,0) 72%);
+      transform: translate3d(-200px, -200px, 0);
+      pointer-events: none;
+      z-index: 0;
+      filter: blur(8px);
+      transition: transform .12s linear;
+    }
+
+    .hero > :not(.fx-mesh):not(.fx-grain):not(.fx-spotlight) { position: relative; z-index: 2; }
+
+    .hero-kpis .hk { position: relative; overflow: hidden; }
+    .hero-kpis .hk::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(110deg, transparent 28%, rgba(255,255,255,.24) 50%, transparent 72%);
+      transform: translateX(-130%);
+      animation: fxCardSweep 5.5s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    .q.active { position: relative; overflow: hidden; box-shadow: 0 0 0 1px rgba(255,255,255,.28) inset, 0 0 24px rgba(100,160,255,.22); }
+    .q.active::after {
+      content: "";
+      position: absolute;
+      inset: -20% -120% -20% auto;
+      width: 50%;
+      transform: skewX(-20deg);
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.55), transparent);
+      animation: fxQuarterPulse 3.4s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    .fill-fact, .fill-plan { position: relative; overflow: hidden; }
+    .fill-fact::after, .fill-plan::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(45deg, rgba(255,255,255,.22) 0 8px, rgba(255,255,255,0) 8px 16px);
+      mix-blend-mode: soft-light;
+      animation: fxStripeMove 1.6s linear infinite;
+      pointer-events: none;
+    }
+
+    .project {
+      position: relative;
+      transform-style: preserve-3d;
+      will-change: transform;
+      transition: transform .22s ease, box-shadow .22s ease, border-color .2s ease;
+    }
+    .project::before {
+      content: "";
+      position: absolute;
+      inset: -1px;
+      border-radius: inherit;
+      background: linear-gradient(135deg, rgba(121,182,255,.35), rgba(255,187,114,.28), rgba(136,124,255,.34));
+      opacity: 0;
+      transition: opacity .2s ease;
+      z-index: -1;
+      filter: blur(10px);
+    }
+    .project::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: linear-gradient(120deg, rgba(255,255,255,0) 25%, rgba(255,255,255,.23) 50%, rgba(255,255,255,0) 75%);
+      transform: translateX(-130%);
+      transition: transform .65s ease;
+      pointer-events: none;
+    }
+    .project:hover::before { opacity: .95; }
+    .project:hover::after { transform: translateX(130%); }
+
+    .ring {
+      box-shadow: 0 0 0 1px rgba(255,255,255,.12) inset, 0 0 28px rgba(98,164,255,.22);
+      animation: fxRingBreath 3.6s ease-in-out infinite;
+    }
+
+    @keyframes fxMeshDrift {
+      0% { transform: translate3d(-1.5%, -1%, 0) rotate(0deg) scale(1); }
+      100% { transform: translate3d(1.8%, 1.6%, 0) rotate(1deg) scale(1.04); }
+    }
+    @keyframes fxGrainShift {
+      0% { transform: translate(0,0); }
+      25% { transform: translate(1px,-1px); }
+      50% { transform: translate(-1px,1px); }
+      75% { transform: translate(1px,1px); }
+      100% { transform: translate(0,0); }
+    }
+    @keyframes fxCardSweep {
+      0%, 55% { transform: translateX(-130%); }
+      100% { transform: translateX(130%); }
+    }
+    @keyframes fxQuarterPulse {
+      0%, 48% { right: 130%; }
+      100% { right: -130%; }
+    }
+    @keyframes fxStripeMove {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(16px); }
+    }
+    @keyframes fxRingBreath {
+      0%, 100% { box-shadow: 0 0 0 1px rgba(255,255,255,.12) inset, 0 0 20px rgba(98,164,255,.18); }
+      50% { box-shadow: 0 0 0 1px rgba(255,255,255,.16) inset, 0 0 34px rgba(98,164,255,.30); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .fx-mesh, .fx-grain, .q.active::after, .hero-kpis .hk::after, .fill-fact::after, .fill-plan::after, .ring { animation: none !important; }
+      .project { transition: none !important; }
+      .project::after, .project::before { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="hero card reveal">
+      <div class="fx-mesh"></div>
+      <div class="fx-grain"></div>
+      <div class="fx-spotlight" id="fxSpotlight"></div>
+      <div class="hero-grid">
+        <div>
+          <h1>Project Flight Deck</h1>
+          <p class="subtitle">Один экран для контроля статуса, темпа и дедлайнов по всем проектам.</p>
+        </div>
+        <div class="hero-right">
+          <div class="q-badge" id="quarterBadge">Q2 2026 · активный квартал</div>
+          <div class="updated" id="metaUpdated">Обновлено: —</div>
+        </div>
+      </div>
+
+      <div class="hero-kpis">
+        <div class="hk"><div class="l">План</div><div class="v" id="chipPlan">0%</div><div class="u">по времени</div></div>
+        <div class="hk"><div class="l">Факт</div><div class="v" id="chipFact">0%</div><div class="u">по задачам</div></div>
+        <div class="hk"><div class="l">Отклонение</div><div class="v" id="chipDelta">0</div><div class="u">п.п.</div></div>
+        <div class="hk"><div class="l">В работе</div><div class="v" id="chipActive">0</div><div class="u" id="metaProjects">проектов: 0</div></div>
+      </div>
+
+      <div class="toolbar">
+        <label>Проект:
+          <select id="projectFilter"></select>
+        </label>
+        <input id="fileInput" type="file" accept=".csv,text/csv" />
+        <button id="resetBtn">Сброс CSV</button>
+        <label style="display:flex;align-items:center;gap:6px;">
+          <input id="hideDone" type="checkbox" /> скрыть done
+        </label>
+      </div>
+
+      <div class="meta-row">
+        <span id="metaPeriod">Период квартала: —</span>
+        <span>FX: <a href="https://reactbits.dev/" target="_blank" rel="noopener noreferrer">reactbits.dev</a> · <a href="https://21st.dev/home" target="_blank" rel="noopener noreferrer">21st.dev</a></span>
+      </div>
+    </header>
+
+    <section class="section card reveal">
+      <h2>Сводка</h2>
+      <div class="summary">
+        <div class="box"><div class="l">Задач</div><div class="v" id="kTotal">0</div></div>
+        <div class="box"><div class="l">Done</div><div class="v" id="kDone">0</div></div>
+        <div class="box"><div class="l">In progress</div><div class="v" id="kWork">0</div></div>
+        <div class="box"><div class="l">Todo</div><div class="v" id="kTodo">0</div></div>
+        <div class="box"><div class="l">Факт, %</div><div class="v" id="kFact">0</div></div>
+      </div>
+    </section>
+
+    <section class="split reveal">
+      <div class="section card">
+        <h2>Квартальный план/факт</h2>
+        <div class="bar-row"><span>План по времени квартала</span><span id="planPct">0%</span></div>
+        <div class="track"><div class="fill-plan" id="planFill"></div></div>
+        <div class="bar-row"><span>Факт выполнения</span><span id="factPct">0%</span></div>
+        <div class="track"><div class="fill-fact" id="factFill"></div></div>
+        <div class="delta-main" id="deltaValue">+0.0 п.п.</div>
+        <div class="delta-sub">Отклонение факт от плана</div>
+      </div>
+      <div class="section card">
+        <h2>Шаги квартала</h2>
+        <div class="quarters" id="quarters"></div>
+      </div>
+    </section>
+
+    <section class="section card reveal">
+      <h2>Проекты: ход исполнения</h2>
+      <div class="projects-grid" id="projectGrid"></div>
+    </section>
+
+    <section class="detail reveal">
+      <div class="section card">
+        <h2 id="detailTitle">Стадии проекта</h2>
+        <div id="stages"></div>
+        <table class="task-table">
+          <thead>
+            <tr>
+              <th style="width:105px;">Дедлайн</th>
+              <th>Задача</th>
+              <th style="width:110px;">Статус</th>
+            </tr>
+          </thead>
+          <tbody id="tasksBody"></tbody>
+        </table>
+      </div>
+      <div class="section card">
+        <h2>Deadline Radar</h2>
+        <ul class="radar" id="radar"></ul>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const embeddedCsv = `date,project,track,task,status,stage,priority,owner,next_step,deadline
+2026-04-03,Intellect-SEO,Content,Собрать и утвердить контент-план на Q2,in_progress,Discovery,high,owner,Зафиксировать список разделов и объемы,2026-04-08
+2026-04-03,Intellect-SEO,Content,Подготовить пакет статей для публикации,todo,Content Production,high,owner,Собрать финальные тексты и мета,2026-04-15
+2026-04-03,Intellect-SEO,Content,Проверка качества и публикация первой волны,todo,Publish,medium,owner,Провести QA и выкладку,2026-04-20
+2026-04-03,Keraplitka,Coliseum,Lirika: финальная проверка контента и мета,in_progress,Content Production,high,owner,Пройти QA чеклист,2026-04-05
+2026-04-03,Keraplitka,Coliseum,Rim: подготовка текста категории + мета,todo,Content Production,high,owner,Собрать финальный текст и title/description,2026-04-06
+2026-04-03,Keraplitka,Coliseum,Пакет изображений для категорий (CSV + manifest),in_progress,Content Production,high,owner,Сверить соответствие image-table/upload,2026-04-06
+2026-04-03,Keraplitka,Coliseum,QA по CATEGORY_TEXT_QA_CHECKLIST,todo,QA,high,owner,Провести проверку для каждой серии,2026-04-10
+2026-04-03,Феникс,OpenCart,Собрать backlog категорий на контент,todo,Discovery,high,owner,Утвердить приоритетные категории,2026-04-09
+2026-04-03,Феникс,OpenCart,Подготовить первую очередь контента,todo,Content Production,high,owner,Сформировать черновики категорий,2026-04-16
+2026-04-03,Феникс,OpenCart,Техпроверка и выкладка первой партии,todo,Publish,medium,owner,Сделать QA и публикацию,2026-04-23
+2026-04-03,Гидрант,OpenCart,Собрать структуру проекта и список источников,todo,Discovery,high,owner,Собрать карту разделов и доноров,2026-04-12
+2026-04-03,Гидрант,OpenCart,Подготовить базовый контент-каркас,todo,RAG Prep,high,owner,Сформировать таблицы и шаблоны,2026-04-19
+2026-04-03,Гидрант,OpenCart,Запустить пилот заполнения,todo,Content Production,medium,owner,Сделать пилот 20-50 SKU,2026-04-26
+2026-04-03,Bathstudio,ShopScript,Собрать план миграции контента с Joomla,in_progress,Discovery,high,owner,Определить блоки миграции и приоритет,2026-04-11
+2026-04-03,Bathstudio,ShopScript,Перенести первую волну карточек/категорий,todo,Content Production,high,owner,Подготовить и перенести пакет №1,2026-04-18
+2026-04-03,Bathstudio,ShopScript,QA после переноса и правки,todo,QA,medium,owner,Проверить SEO и контент целостно,2026-04-25
+2026-04-03,Мастер Саун,MODX,Собрать редакционный план статей на Q2,in_progress,Discovery,high,owner,Утвердить темы и частоту публикаций,2026-04-07
+2026-04-03,Мастер Саун,MODX,Написать и согласовать первую серию статей,todo,Content Production,high,owner,Подготовить статьи к публикации,2026-04-14
+2026-04-03,Мастер Саун,MODX,Публикация и пост-QA,todo,Publish,medium,owner,Проверить индексацию и структуру,2026-04-21`;
+
+    const STAGE_ORDER = ["Backlog","Discovery","RAG Prep","Content Production","QA","Publish","Stabilization"];
+    const WEIGHT = { done: 1, in_progress: 0.5, todo: 0 };
+    const STATUS_CLASS = { done: "st-done", in_progress: "st-work", todo: "st-todo" };
+
+    let rows = [];
+    let activeProject = "__all__";
+
+    function csvSplit(line) {
+      const out = [];
+      let cur = "";
+      let quote = false;
+      for (let i = 0; i < line.length; i++) {
+        const ch = line[i];
+        if (ch === '"' && line[i + 1] === '"') { cur += '"'; i++; continue; }
+        if (ch === '"') { quote = !quote; continue; }
+        if (ch === "," && !quote) { out.push(cur); cur = ""; continue; }
+        cur += ch;
+      }
+      out.push(cur);
+      return out.map(v => v.trim());
+    }
+
+    function parseCSV(text) {
+      const lines = text.trim().split(/\r?\n/).filter(Boolean);
+      const headers = csvSplit(lines.shift());
+      return lines.map(line => {
+        const cols = csvSplit(line);
+        const obj = {};
+        headers.forEach((h, i) => obj[h] = (cols[i] || "").trim());
+        return obj;
+      });
+    }
+
+    function clamp(v, a, b) { return Math.max(a, Math.min(v, b)); }
+
+    function getQuarter(now = new Date()) {
+      const year = now.getFullYear();
+      const q = Math.floor(now.getMonth() / 3) + 1;
+      const startMonth = (q - 1) * 3;
+      const start = new Date(year, startMonth, 1);
+      const end = new Date(year, startMonth + 3, 0);
+      return { year, q, start, end };
+    }
+
+    function pctByTime(now, start, end) {
+      return clamp(((now - start) / (end - start)) * 100, 0, 100);
+    }
+
+    function daysTo(deadline) {
+      if (!deadline) return null;
+      const d = new Date(deadline + "T00:00:00");
+      if (isNaN(d)) return null;
+      const t = new Date();
+      t.setHours(0,0,0,0);
+      return Math.round((d - t) / 86400000);
+    }
+
+    function uniqueProjects(data) {
+      return [...new Set(data.map(r => r.project).filter(Boolean))].sort((a,b) => a.localeCompare(b));
+    }
+
+    function filteredRows() {
+      const hideDone = document.getElementById("hideDone").checked;
+      let data = rows;
+      if (activeProject !== "__all__") data = data.filter(r => r.project === activeProject);
+      if (hideDone) data = data.filter(r => r.status !== "done");
+      return data;
+    }
+
+    function projectSummary(name, data) {
+      const items = data.filter(r => r.project === name);
+      const total = items.length;
+      const done = items.filter(r => r.status === "done").length;
+      const work = items.filter(r => r.status === "in_progress").length;
+      const todo = items.filter(r => r.status === "todo").length;
+      const fact = total ? (items.reduce((s, r) => s + (WEIGHT[r.status] || 0), 0) / total) * 100 : 0;
+      const nearest = items.filter(r => r.deadline).sort((a,b) => (a.deadline||"").localeCompare(b.deadline||""))[0];
+      return { items, total, done, work, todo, fact, nearest };
+    }
+
+    function renderFilter() {
+      const sel = document.getElementById("projectFilter");
+      const projects = uniqueProjects(rows);
+      sel.innerHTML = `<option value="__all__">Все проекты</option>` + projects.map(p => `<option value="${p}">${p}</option>`).join("");
+      if (!projects.includes(activeProject)) activeProject = "__all__";
+      sel.value = activeProject;
+    }
+
+    function renderTop(data) {
+      const total = data.length;
+      const done = data.filter(r => r.status === "done").length;
+      const work = data.filter(r => r.status === "in_progress").length;
+      const todo = data.filter(r => r.status === "todo").length;
+      const fact = total ? (data.reduce((s, r) => s + (WEIGHT[r.status] || 0), 0) / total) * 100 : 0;
+
+      document.getElementById("kTotal").textContent = total;
+      document.getElementById("kDone").textContent = done;
+      document.getElementById("kWork").textContent = work;
+      document.getElementById("kTodo").textContent = todo;
+      document.getElementById("kFact").textContent = fact.toFixed(0);
+
+      const q = getQuarter(new Date());
+      const plan = pctByTime(new Date(), q.start, q.end);
+      const delta = fact - plan;
+
+      document.getElementById("quarterBadge").textContent = `Q${q.q} ${q.year} · активный квартал`;
+      document.getElementById("metaPeriod").textContent = `Период квартала: ${q.start.toISOString().slice(0,10)} .. ${q.end.toISOString().slice(0,10)}`;
+      document.getElementById("metaUpdated").textContent = `Обновлено: ${new Date().toLocaleString("ru-RU")}`;
+      document.getElementById("metaProjects").textContent = `проектов: ${uniqueProjects(rows).length}`;
+
+      document.getElementById("chipPlan").textContent = `${plan.toFixed(1)}%`;
+      document.getElementById("chipFact").textContent = `${fact.toFixed(1)}%`;
+      document.getElementById("chipDelta").textContent = `${delta >= 0 ? "+" : ""}${delta.toFixed(1)}`;
+      document.getElementById("chipActive").textContent = `${work}`;
+
+      document.getElementById("planFill").style.width = `${plan.toFixed(1)}%`;
+      document.getElementById("factFill").style.width = `${fact.toFixed(1)}%`;
+      document.getElementById("planPct").textContent = `${plan.toFixed(1)}%`;
+      document.getElementById("factPct").textContent = `${fact.toFixed(1)}%`;
+
+      document.getElementById("deltaValue").textContent = `${delta >= 0 ? "+" : ""}${delta.toFixed(1)} п.п.`;
+
+      const qWrap = document.getElementById("quarters");
+      qWrap.innerHTML = "";
+      for (let i = 1; i <= 4; i++) {
+        qWrap.innerHTML += `<div class="q ${i === q.q ? "active" : ""}"><b>Q${i}</b><span>${i===q.q ? "активный шаг" : "этап"}</span></div>`;
+      }
+    }
+
+    function renderProjects(allData) {
+      const grid = document.getElementById("projectGrid");
+      grid.innerHTML = "";
+      const names = uniqueProjects(allData);
+      names.forEach(name => {
+        const s = projectSummary(name, allData);
+        const nearestDays = s.nearest ? daysTo(s.nearest.deadline) : null;
+        const nearText = s.nearest ? (nearestDays < 0 ? `просрочено ${Math.abs(nearestDays)} дн` : `через ${nearestDays} дн`) : "дедлайн не задан";
+        const card = document.createElement("article");
+        card.className = "project" + (activeProject === name ? " active" : "");
+        card.innerHTML = `
+          <div class="p-top">
+            <div>
+              <div class="p-name">${name}</div>
+              <div class="p-track">${s.nearest?.track || "track"}</div>
+            </div>
+            <div class="ring" style="--p:${s.fact.toFixed(1)}">${s.fact.toFixed(0)}%</div>
+          </div>
+          <div class="p-stats">
+            <div class="tiny">Done<b>${s.done}</b></div>
+            <div class="tiny">In progress<b>${s.work}</b></div>
+            <div class="tiny">Todo<b>${s.todo}</b></div>
+          </div>
+          <div class="p-deadline">Ближайший дедлайн: <b>${s.nearest?.deadline || "-"}</b> · ${nearText}</div>
+        `;
+        card.addEventListener("click", () => {
+          activeProject = name;
+          document.getElementById("projectFilter").value = name;
+          render();
+        });
+        grid.appendChild(card);
+      });
+    }
+
+    function renderStagesAndTasks(data) {
+      const detailsProject = activeProject === "__all__" ? (uniqueProjects(data)[0] || "__none__") : activeProject;
+      const items = detailsProject === "__none__" ? [] : data.filter(r => r.project === detailsProject);
+      document.getElementById("detailTitle").textContent = detailsProject === "__none__" ? "Стадии проекта" : `Стадии проекта: ${detailsProject}`;
+
+      const stageMap = new Map();
+      items.forEach(r => {
+        const stage = r.stage || "Unsorted";
+        if (!stageMap.has(stage)) stageMap.set(stage, { done:0, in_progress:0, todo:0, total:0 });
+        const v = stageMap.get(stage);
+        v.total += 1;
+        if (r.status === "done") v.done += 1;
+        else if (r.status === "in_progress") v.in_progress += 1;
+        else v.todo += 1;
+      });
+
+      const sEl = document.getElementById("stages");
+      sEl.innerHTML = "";
+      [...stageMap.entries()].sort((a,b) => {
+        const ia = STAGE_ORDER.indexOf(a[0]);
+        const ib = STAGE_ORDER.indexOf(b[0]);
+        return (ia===-1?999:ia) - (ib===-1?999:ib);
+      }).forEach(([name, s]) => {
+        const d = s.total ? (s.done / s.total) * 100 : 0;
+        const w = s.total ? (s.in_progress / s.total) * 100 : 0;
+        const t = s.total ? (s.todo / s.total) * 100 : 0;
+        sEl.innerHTML += `
+          <div class="stage-item">
+            <div class="stage-head"><span>${name}</span><span>${s.done}/${s.total} done</span></div>
+            <div class="stage-stack">
+              <div class="seg-d" style="width:${d}%"></div>
+              <div class="seg-w" style="width:${w}%"></div>
+              <div class="seg-t" style="width:${t}%"></div>
+            </div>
+          </div>
+        `;
+      });
+
+      const body = document.getElementById("tasksBody");
+      body.innerHTML = "";
+      items.slice().sort((a,b) => (a.deadline||"").localeCompare(b.deadline||"")).forEach(r => {
+        body.innerHTML += `
+          <tr>
+            <td>${r.deadline || "-"}</td>
+            <td>${r.task || "-"}</td>
+            <td><span class="pill ${STATUS_CLASS[r.status] || "st-todo"}">${r.status || "-"}</span></td>
+          </tr>
+        `;
+      });
+    }
+
+    function renderRadar(data) {
+      const radar = document.getElementById("radar");
+      const rData = data.filter(r => r.deadline).slice().sort((a,b) => (a.deadline||"").localeCompare(b.deadline||"")).slice(0, 12);
+      radar.innerHTML = "";
+      rData.forEach(r => {
+        const d = daysTo(r.deadline);
+        let cls = "cool", label = "в плане";
+        if (d !== null && d <= 2) { cls = "hot"; label = d < 0 ? "просрочено" : "срочно"; }
+        else if (d !== null && d <= 7) { cls = "warm"; label = "близко"; }
+        radar.innerHTML += `
+          <li>
+            <div class="dl">${r.deadline}</div>
+            <div><b>${r.project}</b><div style="margin-top:3px;font-size:12px;color:#5f789b;">${r.task}</div></div>
+            <span class="urg ${cls}">${label}</span>
+          </li>
+        `;
+      });
+    }
+
+    
+    
+    function applyProjectCardFX() {
+      document.querySelectorAll(".project").forEach((card) => {
+        if (card.dataset.fxReady === "1") return;
+        card.dataset.fxReady = "1";
+
+        card.addEventListener("mousemove", (e) => {
+          const r = card.getBoundingClientRect();
+          const x = (e.clientX - r.left) / r.width;
+          const y = (e.clientY - r.top) / r.height;
+          const rx = (0.5 - y) * 7.5;
+          const ry = (x - 0.5) * 10;
+          const tx = (x - 0.5) * 5;
+          const ty = (y - 0.5) * 4;
+          card.style.transform = `perspective(980px) rotateX(${rx.toFixed(2)}deg) rotateY(${ry.toFixed(2)}deg) translate(${tx.toFixed(2)}px, ${ty.toFixed(2)}px)`;
+        });
+
+        card.addEventListener("mouseleave", () => {
+          card.style.transform = "";
+        });
+      });
+    }
+
+    function initHeroFX() {
+      const hero = document.querySelector('.hero');
+      const spot = document.getElementById('fxSpotlight');
+      if (!hero || !spot) return;
+
+      hero.addEventListener('mousemove', (e) => {
+        const r = hero.getBoundingClientRect();
+        const x = e.clientX - r.left;
+        const y = e.clientY - r.top;
+        spot.style.transform = `translate3d(${(x - 210).toFixed(1)}px, ${(y - 210).toFixed(1)}px, 0)`;
+      });
+
+      hero.addEventListener('mouseleave', () => {
+        spot.style.transform = 'translate3d(-220px, -220px, 0)';
+      });
+    }
+    function render() {
+      const data = filteredRows();
+      renderTop(data);
+      renderProjects(rows);
+      applyProjectCardFX();
+      renderStagesAndTasks(data);
+      renderRadar(data);
+    }
+
+    function reveal() {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(e => { if (e.isIntersecting) e.target.classList.add("show"); });
+      }, { threshold: .1 });
+      document.querySelectorAll(".reveal").forEach(el => io.observe(el));
+    }
+
+    function load(csvText) {
+      rows = parseCSV(csvText);
+      renderFilter();
+      render();
+    }
+
+    document.getElementById("projectFilter").addEventListener("change", (e) => {
+      activeProject = e.target.value;
+      render();
+    });
+    document.getElementById("hideDone").addEventListener("change", () => render());
+
+    document.getElementById("fileInput").addEventListener("change", (e) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => load(String(reader.result || ""));
+      reader.readAsText(file, "utf-8");
+    });
+
+    document.getElementById("resetBtn").addEventListener("click", () => {
+      activeProject = "__all__";
+      document.getElementById("hideDone").checked = false;
+      load(embeddedCsv);
+    });
+
+    load(embeddedCsv);
+    reveal();
+    initHeroFX();
+  </script>
+</body>
+</html>
+
+
+
+
+
+
